@@ -54,6 +54,10 @@ anchor = "smart"
 # Additional menu items
 
 [[menu.main]]
+    name = "소개"
+    weight = 10
+    url = "/about/"
+[[menu.main]]
     name = "Q&A"
     weight = 40
     url = "https://groups.google.com/forum/#!forum/boijo"

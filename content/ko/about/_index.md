@@ -1,9 +1,6 @@
 ---
 title: 프로젝트 소개
 linkTitle: 소개
-menu:
-  main:
-    weight: 10
 layout: docs
 ---
 
