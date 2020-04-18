@@ -1,4 +1,4 @@
-baseURL = "https://boijodoc.github.io/"
+baseURL = "https://elk.pol4.dev/"
 title = "Boijo"
 
 enableRobotsTXT = true
@@ -109,11 +109,11 @@ version = ""
 
 # A link to latest version of the docs. Used in the "version-banner" partial to
 # point people to the main doc site.
-url_latest_version = "https://boijodoc.github.io/"
+url_latest_version = "https://elk.pol4.dev/"
 
 [[params.versions]]
   version = "lastest(7.6)"
-  url = "https://boijodoc.github.io/7.6/docs/"
+  url = "https://elk.pol4.dev/7.6/docs/"
 
 # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
 github_repo = "https://gitlab.com/boijo/boijodoc.github.io/"
