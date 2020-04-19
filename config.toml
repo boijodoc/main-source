@@ -62,9 +62,9 @@ anchor = "smart"
     weight = 40
     url = "https://groups.google.com/forum/#!forum/boijo"
 [[menu.main]]
-    name = "GitLab"
+    name = "GitHub"
     weight = 50
-    url = "https://gitlab.com/boijo"
+    url = "https://github.com/boijodoc/"
 
 [services]
 [services.googleAnalytics]
