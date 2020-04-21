@@ -97,7 +97,7 @@ Elastic Map 서비스를 활용해 위치정보 데이터를 시각화하기도 
   <tr>
    <td><strong>POSCO</strong>
    </td>
-   <td>사용자 중심의 Enterprise search 기능 구현을 위한 검색엔진 교체
+   <td>사용자 중심의 Enterprise search 기능 구현을 위한 검색엔진 교체 
    </td>
   </tr>
     <tr>
