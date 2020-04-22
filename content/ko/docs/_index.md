@@ -7,6 +7,6 @@ menu:
 ---
 
 <script>
-    location.href = "/7.6/docs/"
+    location.href = "/docs-7.6/"
 </script>
 
