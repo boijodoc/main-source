@@ -28,7 +28,7 @@ layout: docs
    <td><strong>Logstash</strong>
    </td>
    <td>모든 데이터를 수집하고 강화 및 통합하기 위한 ELK스택의 중앙 데이터 플로우 엔진입니다.
-Logstash 필터는 입력된 데이터들을 통합된 형식으로 변환하여 분석이 용이하도록 만들어줍니다.
+Logstash 필터는 입력된 데이터들을 통합된 형식으로 변환하여 분석이 용이하도록 만들어줍니다. 
 그 후 저장소인 Elasticsearch로 데이터를 전송합니다.
    </td>
   </tr>
