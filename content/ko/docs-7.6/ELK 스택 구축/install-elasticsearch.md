@@ -12,7 +12,7 @@ description: >
 
 ## Elasticsearch 설치 및 실행
 
-**ELK 스택의 버전은 모두 같은 버전으로 맞춰주는 것이 좋습니다!**
+**ELK 스택의 버전은 모두 같은 버전으로 맞춰줘야 합니다!**
 
 **ELK 스택을 모두 같은 서버에 설치할 필요는 없습니다!**
 
@@ -20,7 +20,7 @@ description: >
 
    ![Elastic 홈페이지](/images/elastic-home.png)
 
-2. Elasticsearch **다운로드** 링크를 클릭합니다.
+2. Elasticsearch의 **다운로드** 링크를 클릭합니다.
 
    ![Elasticsearch 다운로드 1](/images/7.6/elasticsearch-download-1.png)
 
