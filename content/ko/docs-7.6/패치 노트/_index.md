@@ -8,3 +8,4 @@ description: >
   v7.6 패치 노트
 ---
 
+![Patch note](/images/patch-note.jpg)
