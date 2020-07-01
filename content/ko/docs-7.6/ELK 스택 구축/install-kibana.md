@@ -10,7 +10,7 @@ description: >
 
  Kibana는 Elasticsearch를 조작하거나, 저장되어있는 데이터를 시각화할 수 있는 툴입니다. 웹 서버 형태로 동작하기 때문에 웹 브라우저로 어떤 디바이스에서든지 쉽게 접근할 수 있습니다. 이번에는 Kibana의 가장 기본적인 설치 및 설정 방법에 대해 설명합니다. 이 매뉴얼을 따라하면 Kibana를 통해 로컬 또는 외부에 있는 Elasticsearch에 접근할 수 있을 것입니다.
 
-# Kibana 설치 및 실행
+## Kibana 설치 및 실행
 
 **ELK 스택의 버전은 모두 같은 버전으로 맞춰줘야 합니다!**
 
@@ -106,11 +106,11 @@ description: >
 
    ![Kibana 시작](/images/7.6/kibana-start-1.png)
 
-# Kibana 설정
+## Kibana 설정
 
  Kibana의 설정 파일인 /etc/kibana/kibana.yml을 변경하여 설정할 수 있는 부분에 대해서 다룹니다.
 
-## 포트 변경
+### 포트 변경
 
  Kibana의 기본 포트는 5601 입니다. 만약 다른 포트를 사용하고 싶다면 아래 옵션을 변경합니다.
 
@@ -118,7 +118,7 @@ description: >
 server.port: [포트]
 ```
 
-## 외부 접속 허용
+### 외부 접속 허용
 
  Kibana는 기본적으로 로컬에서만 접속 가능하도록 되어있습니다. 외부에서 접속이 가능하게 하려면 아래 옵션을 서버의 IP 주소로 설정합니다. 아래 옵션을 0.0.0.0으로 설정하면 어디서나 접속 가능합니다.
 
@@ -128,7 +128,7 @@ server.port: [포트]
 server.host: "[IP]"
 ```
 
-## 다른 Elasticsearch 연결
+### 다른 Elasticsearch 연결
 
  Kibana는 기본적으로 로컬에 있는 Elasticsearch를 제어합니다. 다른 서버에 있는 Elasticsearch를 제어하려면 Kibana의 설정 파일인 /etc/kibana/kibana.yml에 있는 옵션을 바꿔야합니다.
 

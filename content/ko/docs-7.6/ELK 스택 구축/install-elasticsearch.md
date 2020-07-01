@@ -96,7 +96,7 @@ description: >
 
    ![Elasticsearch 시작](/images/7.6/elasticsearch-start-1.png)
 
-# Elasticsearch 설정
+## Elasticsearch 설정
 
  Elasticsearch가 설치된 시스템을 하나의 노드라고 합니다. Elasticsearch는 여러개의 노드로 구성된 클러스터 단위로 시스템을 운용하는 기능을 제공하지만 이번에는 가장 기본적인 시스템을 구성할 것입니다. 아래 방법들을 통해 Elasticsearch를 단일 노드로 운영할 수 있도록 설정해보도록 하겠습니다.
 
@@ -104,13 +104,13 @@ description: >
 
  클러스터의 필요성은 [여기](클러스터)에서 설명하겠습니다.
 
-## 포트 변경
+### 포트 변경
 
 ```yaml
 http.port: [포트]
 ```
 
-## 외부 접속 허용
+### 외부 접속 허용
 
  [IP]에 루프백 주소가 들어가면 로컬에서, 사설 혹은 공인 IP가 들어가면 같은 네트워크 대역대에서, 0 혹은 0.0.0.0이 들어가면 전체에서 접근이 가능합니다.
 
@@ -123,7 +123,7 @@ cluster.initial_master_nodes: ["node-1"]
 network.host: [IP]
 ```
 
-## 접근 제한
+### 접근 제한
 
  부득이하게 모든 호스트에서 접속을 허용해야됐지만 특정 호스트만 접근할 수 있도록 하고싶다면 외부 프로그램을 사용해야 합니다. Elastic에서도 이러한 기능들을 제공하지 않는 것은 아니지만 보안 기능의 경우 유료인 [xpack](https://www.elastic.co/guide/kr/x-pack/current/xpack-introduction.html)으로 제공되고 있기 때문입니다. 아래는 xpack 외에 생각해볼만한 옵션들입니다.
 
@@ -136,7 +136,7 @@ network.host: [IP]
 
 2. Elasticsearch를 루프백 주소로 운용하고 Apache의 [mod_proxy](https://httpd.apache.org/docs/current/mod/mod_proxy.html)나, Nginx의 [Reverse Proxy](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/) 등의 프록시 기능을 사용. Apache의 [Access Control](https://httpd.apache.org/docs/2.4/howto/access.html) 설정, Nginx [접근 제한 설정](https://docs.nginx.com/nginx/admin-guide/security-controls/controlling-access-proxied-tcp/) 등의 접근 제한 사용.
 
-## 자동 시작
+### 자동 시작
 
  Elasticsearch가 부팅 시 자동으로 시작되게 하는 방법은 다음과 같습니다.
 
