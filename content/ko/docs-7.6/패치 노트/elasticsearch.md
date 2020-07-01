@@ -1,7 +1,4 @@
-﻿  
-
-
----
+﻿---
 title: "Elasticsearch 패치 노트"
 linkTitle: "Elasticsearch"
 type: docs

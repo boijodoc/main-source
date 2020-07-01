@@ -1,11 +1,8 @@
-﻿  
-
-
----
+﻿---
 title: "Kibana 패치 노트"
 linkTitle: "Kibana"
 type: docs
-weight: 1
+weight: 3
 date: 2020-07-01
 description: >
   Kibana v7.6 패치 노트

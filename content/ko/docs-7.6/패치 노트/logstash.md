@@ -1,10 +1,8 @@
-﻿  
-
----
+﻿---
 title: "Logstash 패치 노트"
 linkTitle: "Logstash"
 type: docs
-weight: 1
+weight: 2
 date: 2020-07-01
 description: >
   Logstash v7.6 패치 노트

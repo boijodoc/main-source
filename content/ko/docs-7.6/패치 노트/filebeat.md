@@ -1,11 +1,8 @@
-﻿  
-
-
----
+﻿---
 title: "Filebeat 패치 노트"
 linkTitle: "Filebeat"
 type: docs
-weight: 1
+weight: 4
 date: 2020-07-01
 description: >
   Filebeat v7.6 패치 노트
