@@ -4,7 +4,7 @@ linkTitle: "Elasticsearch 설치하기"
 type: docs
 weight: 1
 description: >
-  가장 기본적인 Elasticsearchfmf 설치 및 설정하는 방법에 대해 설명합니다.
+  가장 기본적인 Elasticsearch를 설치 및 설정하는 방법에 대해 설명합니다.
 ---
 
  Elasticsearch이 설치된 시스템을 노드라고 합니다. Elasticsearch는 여러 시스템에 설치한 후 연동하는 기능을 제공합니다.  이번에는 Elasticsearch의 가장 기본적인 설치 및 설정 방법에 대해 설명합니다. 이 매뉴얼을 따라하면 로컬 서버에서 Elasticsearch를 통해서 여러 데이터들을 저장하고 분석해서 사용할 수 있을 것입니다.
