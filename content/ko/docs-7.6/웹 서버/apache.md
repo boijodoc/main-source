@@ -33,6 +33,7 @@ description: >
     </tbody>
 </table>
 
+
 ## 아파치 웹 로그 형식
 
  로그를 파싱해서 Elasticsearch에 저장하려면 로그가 어떻게 생겼는지 알아야 합니다. 로그는 필드로 구분되어 지정된 형식으로 쓰이기 때문에 일종의 패턴이 있습니다.  아파치의 기본 로그 형식에 대해서 알아보겠습니다. 사실 추가적인 설정을 통해 로그에 포함되는 정보의 양을 늘릴 수 있지만 먼저 기본적인 로그들을 한번 이용해보도록 하겠습니다.
@@ -119,6 +120,7 @@ description: >
            </tr>
        </tbody>
    </table>
+
 
    ![Filebeat 다운로드 3](/images/7.6/filebeat-download-3.png)
 
@@ -232,10 +234,6 @@ description: >
      #ssl.key: "/etc/pki/client/cert.key"
    ```
 
-## Index 초기 설정
-
- Index에 데이터를 넣으면 기본적으로 keyword(string) 형식으로 들어갑니다. 그래서 시간, 위치 정보 등의 필드들은 미리 설정해두어야 합니다. 
-
 ## Logstash 설정
 
  앞서 Logstash를 설치했지만 Logstash의 설정은 어떤 데이터를 처리하느냐에 따라 달라지기 때문에 하지 않았습니다. Apache의 로그 데이터를 가공해서 Elasticsearch 저장할 수 있도록 Logstash를 설정합니다.
@@ -304,38 +302,6 @@ output {
 }
 ```
 
-## Index 초기 설정
-
- Elasticsearch에 데이터를 저장하면 기본 keyword(string) 형식으로 들어갑니다. 시간, 위치, 숫자 형식 등의 특별한 형식을 집어넣기 위해선 해당 index에 초기 설정을 해야합니다. 아래는 Apache의 로그 데이터를 저장하기 위해서 index의 초기 설정을 하는 방법입니다.
-
-1. 연결된 Elasticsearch에 index 초기 설정 쿼리를 보냅니다.
-
-3. ```
-   PUT apache
-   {
-     "mappings": { 
-       "properties": {
-         "apache2.access.geoip.location": { 
-           "type": "geo_point"
-         },
-         "apache2.access.time" : {
-           "type": "date"
-         },
-         "apache2.access.response_code": { 
-           "type": "integer"
-         },
-         "apache2.error.timestamp": {
-           "type": "date"
-         }
-       }
-     }
-   }
-   ```
-
-   ![Kibana index setting](/images/7.6/kibana-index-setting-1.png)
-
-   ![Kibana index setting](/images/7.6/kibana-index-setting-2.png)
-
 ## Logstash, Filebeat 실행
 
 ```shell
@@ -372,7 +338,7 @@ sudo systemctl enable --now logstash filebeat
 
 5. Create index pattern 버튼을 클릭해서 index 패턴 생성을 시작합니다.
 
-   ​	![Kibana management 5](/images/7.6/kibana-make-pattern-5.png)
+   	![Kibana management 5](/images/7.6/kibana-make-pattern-5.png)
 
 6. Index 이름을 입력하고 Next step을 클릭합니다. 와일드카드 문자도 사용 가능합니다.
 
@@ -393,4 +359,3 @@ sudo systemctl enable --now logstash filebeat
    ![Kibana discover 2](/images/7.6/kibana-check-index-2.png)
 
    ![Kibana discover 3](/images/7.6/kibana-check-index-3.png)
-
