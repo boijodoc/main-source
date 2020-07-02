@@ -53,7 +53,9 @@ description: >
   
   # 없다면 추가
   LogFormat "%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined
-  CustomLog logs/access_log vhost_combined
+  
+  # Virtual Host 태그 안에 추가
+  CustomLog logs/access.log vhost_combined
   ```
 
   
@@ -230,6 +232,10 @@ description: >
      #ssl.key: "/etc/pki/client/cert.key"
    ```
 
+## Index 초기 설정
+
+ Index에 데이터를 넣으면 기본적으로 keyword(string) 형식으로 들어갑니다. 그래서 시간, 위치 정보 등의 필드들은 미리 설정해두어야 합니다. 
+
 ## Logstash 설정
 
  앞서 Logstash를 설치했지만 Logstash의 설정은 어떤 데이터를 처리하느냐에 따라 달라지기 때문에 하지 않았습니다. Apache의 로그 데이터를 가공해서 Elasticsearch 저장할 수 있도록 Logstash를 설정합니다.
@@ -246,7 +252,7 @@ input {
   }
 }
 filter {
-  if [fileset][module] == "apache2" {
+  if [event][module] == "apache" {
     if [fileset][name] == "access" {
       grok {
         match => { "message" => ["%{IPORHOST:[apache2][access][remote_ip]} - %{DATA:[apache2][access][user_name]} \[%{HTTPDATE:[apache2][access][time]}\] \"%{WORD:[apache2][access][method]} %{DATA:[apache2][access][url]} HTTP/%{NUMBER:[apache2][access][http_version]}\" %{NUMBER:[apache2][access][response_code]} %{NUMBER:[apache2][access][body_sent][bytes]}( \"%{DATA:[apache2][access][referrer]}\")?( \"%{DATA:[apache2][access][agent]}\")?",
@@ -294,9 +300,41 @@ output {
     hosts => localhost
     manage_template => false
     index => "apache"
-  }
+  }를
 }
 ```
+
+## Index 초기 설정
+
+ Elasticsearch에 데이터를 저장하면 기본 keyword(string) 형식으로 들어갑니다. 시간, 위치, 숫자 형식 등의 특별한 형식을 집어넣기 위해선 해당 index에 초기 설정을 해야합니다. 아래는 Apache의 로그 데이터를 저장하기 위해서 index의 초기 설정을 하는 방법입니다.
+
+1. 연결된 Elasticsearch에 index 초기 설정 쿼리를 보냅니다.
+
+3. ```
+   PUT apache
+   {
+     "mappings": { 
+       "properties": {
+         "apache2.access.geoip.location": { 
+           "type": "geo_point"
+         },
+         "apache2.access.time" : {
+           "type": "date"
+         },
+         "apache2.access.response_code": { 
+           "type": "integer"
+         },
+         "apache2.error.timestamp": {
+           "type": "date"
+         }
+       }
+     }
+   }
+   ```
+
+   ![Kibana index setting](/images/7.6/kibana-index-setting-1.png)
+
+   ![Kibana index setting](/images/7.6/kibana-index-setting-2.png)
 
 ## Logstash, Filebeat 실행
 
@@ -304,7 +342,7 @@ output {
 sudo systemctl enable --now logstash filebeat
 ```
 
-## Index 패턴 생성하기
+## Index 패턴 생성
 
  Elasticsearch에서 저장된 데이터를 사용하기 전에 index 식별과 필드의 설정을 위해서 반드시 index 패턴을 생성해야 합니다. 아래는 위 설정으로 저장된 Apache의 로그 데이터 index의 index 패턴을 생성하는 방법입니다.
 
@@ -314,31 +352,35 @@ sudo systemctl enable --now logstash filebeat
 
 2. Kibana의 왼쪽 메뉴에서 Dev Tools 버튼을 클릭합니다.
 
+   ![Kibana dev tools 1](/images/7.6/kibana-dev-tool.png)
+
+3. 연결된 Elasticsearch에 데이터가 정상적으로 저장되고 있는지 확인하는 쿼리를 보냅니다. 하나 이상의 document라도 있다면 데이터의 입력이 시작된 것입니다.
+
+   ```
+   GET apache/_count
+   ```
+
    ![Kibana dev tools 1](/images/7.6/kibana-make-pattern-1.png)
 
-3. 연결된 Elasticsearch에 데이터가 정상적으로 저장되고 있는지 확인하는 쿼리를 보냅니다.
-
-   ![Kibana dev tools 1](/images/7.6/kibana-make-pattern-2.png)
-
-   ![Kibana dev tools 1](/images/7.6/kibana-make-pattern-3.png)
+   ![Kibana dev tools 2](/images/7.6/kibana-make-pattern-2.png)
 
 4. 다음과 같이 document의 개수가 확인되었다면 index 패턴을 생성하기 위해 왼쪽 메뉴에서 Management 버튼을 클릭합니다. 그 후 Kibana 아래 Index Patterns 버튼을 클릭합니다.
 
-   ![Kibana management 1](/images/7.6/kibana-make-pattern-4.png)
+   ![Kibana management 3](/images/7.6/kibana-make-pattern-3.png)
 
-   ![Kibana management 2](/images/7.6/kibana-make-pattern-5.png)
+   ![Kibana management 4](/images/7.6/kibana-make-pattern-4.png)
 
 5. Create index pattern 버튼을 클릭해서 index 패턴 생성을 시작합니다.
 
-   ![Kibana management 3](/images/7.6/kibana-make-pattern-6.png)
+   ​	![Kibana management 5](/images/7.6/kibana-make-pattern-5.png)
 
 6. Index 이름을 입력하고 Next step을 클릭합니다. 와일드카드 문자도 사용 가능합니다.
 
-   ![Kibana management 4](/images/7.6/kibana-make-pattern-7.png)
+   ![Kibana management 6](/images/7.6/kibana-make-pattern-6.png)
 
-7. 시간 필터 필드 설정 후 Create index pattern 버튼을 클릭합니다.
+7. @timestamp로 시간 필터 필드를 설정 후 Create index pattern 버튼을 클릭합니다.
 
-   ![Kibana management 6](/images/7.6/kibana-make-pattern-8.png)
+   ![Kibana management 7](/images/7.6/kibana-make-pattern-7.png)
 
 ## Document 확인하기
 
