@@ -1,3 +1,4 @@
+```
 ---
 title: "엔진엑스"
 linkTitle: "엔진엑스"
@@ -45,25 +46,21 @@ description: >
 - access_log
 
   ```
-  # [원격지 호스트] [원격지 사용자 계정] [요청을 처리한 시간] [원격지 호스트 요청] [HTTP 응답 코드] [요청한 바이트 크기 데이터] [해당 페이지 이전에 거쳐온 URL] [방문자가 사용한 브라우저] [프록시 서버를 거치기 전의 접속 IP]
+  # [원격지 호스트] [원격지 사용자 이름] [인증이 요청된 원격 사용자 이름] [요청한 시간과 날짜] [HTTP 메소드를 포함한 요청의 첫 라인] [HTTP 상태 코드] [헤더를 제외한 전송된 크기] [원격지 사용자 pc환경] [방문자가 사용한 브라우저]
   196.52.43.100 - - [29/May/2020:02:17:41 +0900] "GET / HTTP/1.1" 200 396 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36"
   ```
 
    access_log에서는 얻어낼 정보가 많은 것 같습니다. 원격지 호스트를 이용해서 요청한 사람의 위치를 알아낼 수 있고, 어떤 페이지에 어떤 메소드로 요청이 많이 오는지 알 수 있습니다. 어떤 시간이나 어떤 분기에 요청이 많이 들어오는지 분석해서 서버를 스케일 다운/업, 인/아웃 할 지 결정할 수 있고, 요청의 크기를 통해 공격인이 아닌지도 어느 정도 예측이 가능할 것 같습니다.
 
-	만일 엔진엑스 앞단에 리버스 프록시 서버가 있을 경우, 원격지 호스트에 프록시 서버의 IP가 찍히게 됩니다. access_log의 기본 형식에 프록시 서버를 거치기 전의 접속 IP가 없다면 이를 추가해 리버스 프록시 이전의 IP가 남게 해야 합니다.
-
 - error_log
 
   ```
   # [요청한 시간과 날짜] [에러 레벨] [pid] [client [IP:Port]] [로그 메시지]
-  [Fri May 26 04:13:58.570775 2020] [php7:notice] [pid 2093] [client ::1:56854] PHP Notice:  Undefined variable: remember in /srv/http/getSalt.php on line 13, referer: http://localhost:3000/~120140261/app/login
+  [Fri May 26 04:13:58.570775 2020] [php7:notice] [pid 2093] [client ::1:56854] PHP Notice:  Undefined variable: remember in /srv/http/getSalt.php on line 13, referer: http://localhost:3000
   ```
 
   반면 error_log에서는 사실 분석을 자동화하기는 힘들 것 같습니다. 공격을 시도하는 방법은 셀 수 없을 정도로 여러 방법이 있고 어떠한 에러가 발생할지 예측하기는 사실 힘듭니다. 다만 에러 레벨을 통해 크리티컬한 에러들을 모아서 따로 분석할 수 있을 것 같습니다. 또는 에러 레벨로 1차적으로 뽑아낸 로그 메시지들의 분석을 자동화할 수 있을 것 같습니다.
   
-
-
 
 ## Filebeat 설치 및 설정
 
@@ -73,15 +70,15 @@ description: >
 
 1. [Elastic 홈페이지](https://elastic.co) 접속 후 우측 위에 있는 **무료로 시작**을 클릭합니다.
 
-   ![elastic-home](C:\Users\채은솔\Desktop\images\elastic-home.PNG)
+   ![elastic-home](/images/elastic-home.png)
    
 2. Beats의 **다운로드** 버튼을 클릭합니다.
 
-   ![filebeat-download-1](C:\Users\채은솔\Desktop\images\filebeat-download-1.PNG)
+   ![filebeat-download-1](/images/7.6/filebeat-download-1.png)
 
 3. Filebeat의 **다운로드** 버튼을 클릭합니다.
 
-   ![filebeat-download-2](C:\Users\채은솔\Desktop\images\filebeat-download-2.PNG)
+   ![filebeat-download-2](/images/7.6/filebeat-download-2.png)
 
 4. 버전을 확인하고 운영체제에 맞는 파일을 다운로드합니다.
 
@@ -117,11 +114,11 @@ description: >
    </table>
    
 
-   ![filebeat-download-3](C:\Users\채은솔\Desktop\images\filebeat-download-3.PNG)
+   ![filebeat-download-3](/images/7.6/filebeat-download-3.png)
 
 5. 이전 버전을 설치하고 싶다면 아래에 있는 **past releases** 링크를 클릭해서 맞는 버전을 다운로드합니다.
 
-   ![filebeat-download-4](C:\Users\채은솔\Desktop\images\filebeat-download-4.PNG)
+   ![filebeat-download-4](/images/7.6/filebeat-download-4.png)
 
 6. 패키지 관리자로 다운로드한 Filebeat를 설치합니다.
 
@@ -235,7 +232,7 @@ description: >
 
 1. 5044포트에 Filebeat로부터 데이터를 입력받아 Nginx에 맞게 데이터를 가공해서 Elasticsearch의 nginx index에 저장하도록 설정합니다.
 
-```
+​```
 # /etc/logstash/conf.d/logstash.conf
 
 input {
@@ -247,61 +244,20 @@ input {
 filter {
   if [event][module] == "nginx" {
     if [fileset][name] == "access" {
-
-'$remote_addr - $remote_user [$time_local] "$request" '
-                  '$status $body_bytes_sent "$http_referer" '
-                  '"$http_user_agent" "$http_x_forwarded_for"';
-
-      grok {
-        match => { "message" => ["%{IPORHOST:[nginx][access][remote_ip]} - %{DATA:[nginx][access][user_name]} \[%{HTTPDATE:[nginx][access][time]}\] \"%{DATA:[nginx][access][url]} HTTP/%{NUMBER:[nginx][access][http_version]}\" %{NUMBER:[nginx][access][response_code]} %{NUMBER:[nginx][access][body_sent][bytes]}( \"%{DATA:[nginx][access][referrer]}\")?( \"%{DATA:[nginx][access][agent]}\")?",
-          "%{IPORHOST:[nginx][access][remote_ip]} - %{DATA:[nginx][access][user_name]} \\[%{HTTPDATE:[nginx][access][time]}\\] \"-\" %{NUMBER:[nginx][access][response_code]} -" ] }
-        remove_field => "message"
-      }
-      mutate {
-        add_field => { "read_timestamp" => "%{@timestamp}" }
-      }
-      date {
-        match => [ "[nginx][access][time]", "dd/MMM/YYYY:H:m:s Z" ]
-        remove_field => "[nginx][access][time]"
-      }
-      useragent {
-        source => "[nginx][access][agent]"
-        target => "[nginx][access][user_agent]"
-        remove_field => "[nginx][access][agent]"
-      }
-      geoip {
-        source => "[nginx][access][remote_ip]"
-        target => "[nginx][access][geoip]"
-      }
-    }
-    else if [fileset][name] == "error" {
-      grok {
-        match => { "message" => ["\[%{APACHE_TIME:[nginx][error][timestamp]}\] \[%{LOGLEVEL:[nginx][error][level]}\]( \[client %{IPORHOST:[nginx][error][client]}\])? %{GREEDYDATA:[nginx][error][message]}",
-          "\[%{NGINX_TIME:[nginx][error][timestamp]}\] \[%{DATA:[nginx][error][module]}:%{LOGLEVEL:[nginx][error][level]}\] \[pid %{NUMBER:[nginx][error][pid]}(:tid %{NUMBER:[nginx][error][tid]})?\]( \[client %{IPORHOST:[nginx][error][client]}\])? %{GREEDYDATA:[nginx][error][message1]}" ] }
-        pattern_definitions => {
-          "NGINX_TIME" => "%{DAY} %{MONTH} %{MONTHDAY} %{TIME} %{YEAR}"
+		grok {
+        	match => { "message" => "%{COMBINEDAPACHELOG}" }
         }
-        remove_field => "message"
-      }
-      mutate {
-        rename => { "[nginx][error][message1]" => "[nginx][error][message]" }
-      }
-      date {
-        match => [ "[nginx][error][timestamp]", "EEE MMM dd H:m:s YYYY", "EEE MMM dd H:m:s.SSSSSS YYYY" ]
-        remove_field => "[nginx][error][timestamp]"
-      }
     }
   }
 }
 output {
-  elasticsearch {
+    elasticsearch {
     hosts => localhost
     manage_template => false
-    index => "apache"
+    index => "nginx"
   }
 }
-```
-
+​```
 
 
 ## Index 초기 설정
@@ -332,18 +288,12 @@ output {
    }
    ```
 
-   
-
-   ![kibana-index-setting-1](C:\Users\채은솔\Desktop\images\kibana-index-setting-1.PNG)
-
-
 
 ## Logstash, Filebeat 실행
 
-```shell
+​```shell
 sudo systemctl enable --now logstash filebeat
-```
-
+​```
 
 
 ## Index 패턴 생성
@@ -352,11 +302,11 @@ sudo systemctl enable --now logstash filebeat
 
 1. Kibana에 접속해서 Explore my own 링크를 클릭합니다.
 
-   ![kibana-start-1](C:\Users\채은솔\Desktop\images\kibana-start-1.PNG)
+   ![kibana-start-1](/images/7.6/kibana-start-1.png)
 
 2. Kibana의 왼쪽 메뉴에서 Dev Tools 버튼을 클릭합니다.
 
-   ![kibana-dev-tool](C:\Users\채은솔\Desktop\images\kibana-dev-tool.PNG)
+   ![kibana-dev-tool](/images/7.6/kibana-dev-tool.png)
 
 3. 연결된 Elasticsearch에 데이터가 정상적으로 저장되고 있는지 확인하는 쿼리를 보냅니다. 하나 이상의 document라도 있다면 데이터의 입력이 시작된 것입니다.
 
@@ -364,36 +314,28 @@ sudo systemctl enable --now logstash filebeat
    GET nginx/_count
    ```
 
-   ![kibana-make-pattern-2](C:\Users\채은솔\Desktop\images\kibana-make-pattern-2.PNG)
+   ![kibana-make-pattern-2](/images/7.6/nginx-1.png)
 
 4. 다음과 같이 document의 개수가 확인되었다면 index 패턴을 생성하기 위해 왼쪽 메뉴에서 Management 버튼을 클릭합니다. 그 후 Kibana 아래 Index Patterns 버튼을 클릭합니다.
 
-   ![kibana-make-pattern-3](C:\Users\채은솔\Desktop\images\kibana-make-pattern-3.PNG)
+   ![kibana-make-pattern-3](/images/7.6/kibana-make-pattern-3.png)
 
-   ![kibana-make-pattern-4](C:\Users\채은솔\Desktop\images\kibana-make-pattern-4.PNG)
+   ![kibana-make-pattern-4](/images/7.6/kibana-make-pattern-4.png)
 
 5. Create index pattern 버튼을 클릭해서 index 패턴 생성을 시작합니다.
 
-    ![kibana-make-pattern-5](C:\Users\채은솔\Desktop\images\kibana-make-pattern-5.PNG)
+    ![kibana-make-pattern-5](/images/7.6/kibana-make-pattern-5.png)
 
 6. Index 이름을 입력하고 Next step을 클릭합니다. 와일드카드 문자도 사용 가능합니다.
 
-   ![kibana-make-pattern-6](C:\Users\채은솔\Desktop\images\kibana-make-pattern-6.PNG)
-
 7. @timestamp로 시간 필터 필드를 설정 후 Create index pattern 버튼을 클릭합니다.
-
-   ![kibana-make-pattern-7](C:\Users\채은솔\Desktop\images\kibana-make-pattern-7.PNG)
-
 
 
 ## Document 확인하기
 
 1. 생성된 index 패턴을 확인한 뒤 저장된 데이터를 보기 위해서 왼쪽 메뉴에서 Discover를 클릭합니다.
 
-   ![kibana-check-index-1](C:\Users\채은솔\Desktop\images\kibana-check-index-1.PNG)
-
 2. 오른쪽 위 시간 필터를 보면 기본으로 최근 15분의 데이터를 불러옵니다. 하지만 최근 15분의 데이터가 없기 때문에 아무것도 보이지 않습니다. 시간 필터를 조절해서 데이터를 확인할 수 있습니다.
 
-   ![kibana-check-index-2](C:\Users\채은솔\Desktop\images\kibana-check-index-2.PNG)
-
-   ![kibana-check-index-3](C:\Users\채은솔\Desktop\images\kibana-check-index-3.PNG)
+   ![kibana-check-index-2](/images/7.6/nginx-2.png)
+```
