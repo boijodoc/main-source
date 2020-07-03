@@ -302,6 +302,37 @@ output {
 }
 ```
 
+## Index 초기 설정
+
+ Logstash와 Filebeat를 실행해서 데이터를 저장하기 전에 위치 정보 같은 특별한 정보들은 Elasticsearch에서 제대로 인식할 수 있도록 미리 설정해야합니다. 
+
+1. Kibana에 접속해서 Explore my own 링크를 클릭합니다.
+
+   ![Kibana main](/images/7.6/kibana-start.png)
+
+2. Kibana의 왼쪽 메뉴에서 Dev Tools 버튼을 클릭합니다.
+
+   ![Kibana dev tools 1](/images/7.6/kibana-dev-tool.png)
+
+3. 연결된 Elasticsearch에 아래 쿼리를 실행해서 위치 정보에 대한 초기 설정을 진행합니다.
+
+   ```
+   PUT apache
+   {
+     "mappings" : { 
+       "properties": {
+         "apache2.access.geoip.location" : { 
+           "type" : "geo_point"
+         }
+       }
+     }
+   }
+   ```
+
+   ![Create index 1](/images/7.6/kibana-create-index-1.png)
+
+   ![Create index 2](/images/7.6/kibana-create-index-2.png)
+
 ## Logstash, Filebeat 실행
 
 ```shell
@@ -311,10 +342,6 @@ sudo systemctl enable --now logstash filebeat
 ## Index 패턴 생성
 
  Elasticsearch에서 저장된 데이터를 사용하기 전에 index 식별과 필드의 설정을 위해서 반드시 index 패턴을 생성해야 합니다. 아래는 위 설정으로 저장된 Apache의 로그 데이터 index의 index 패턴을 생성하는 방법입니다.
-
-1. Kibana에 접속해서 Explore my own 링크를 클릭합니다.
-
-   ![Kibana main](/images/7.6/kibana-start-1.png)
 
 2. Kibana의 왼쪽 메뉴에서 Dev Tools 버튼을 클릭합니다.
 
