@@ -1,2 +1,7 @@
+# Build related files
 resources
 public
+
+# Nodejs related files
+node_modules
+package-lock.json
