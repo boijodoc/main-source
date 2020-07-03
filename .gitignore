@@ -1,6 +1,5 @@
 # Build related files
 resources
-public
 
 # Nodejs related files
 node_modules
